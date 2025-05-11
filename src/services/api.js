@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'https://chidorispring.onrender.com/api'; // Keep your main URL here
+const API_URL = import.meta.env.PROD 
+  ? 'https://chidorispring.onrender.com/api'
+  : 'https://cors-anywhere.herokuapp.com/https://chidorispring.onrender.com/api';
+ // Keep your main URL here
 
 // Create axios instance with default config
 const api = axios.create({
@@ -14,7 +17,10 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
-    if (token) {
+    // Список endpoint'ов, требующих токен
+    const protectedPaths = ['/users/', '/posts/', '/auth/me'];
+    const isProtected = protectedPaths.some((path) => config.url.includes(path));
+    if (token && isProtected) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -24,13 +30,11 @@ api.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle token refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // If error is 401 and we haven't tried to refresh token yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -43,11 +47,9 @@ api.interceptors.response.use(
         const { accessToken } = response.data;
         localStorage.setItem('accessToken', accessToken);
 
-        // Retry the original request with new token
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        // If refresh token fails, redirect to login
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         window.location.href = '/login';
@@ -83,6 +85,17 @@ export const authAPI = {
 
   getCurrentUser: async () => {
     const response = await api.get('/auth/me');
+    return response.data;
+  },
+};
+
+export const postsAPI = {
+  getRecommendedPosts: async (token) => {
+    const response = await api.get('/posts/recommended', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     return response.data;
   },
 };

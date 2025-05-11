@@ -4,6 +4,7 @@ import { mailOutline, lockClosedOutline } from 'ionicons/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import './Register.css';
+import '../components/main/Home.css';
 
 function Login() {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ function Login() {
       console.log('Response headers:', success?.headers);
       
       if (success) {
-        navigate('/dashboard');
+        navigate('/home');
       }
     } catch (error) {
       console.error('Login error:', error);

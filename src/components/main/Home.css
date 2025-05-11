@@ -1,0 +1,131 @@
+.home-bg {
+  min-height: 100vh;
+  background: #CAF0F8;
+  padding-bottom: 40px;
+  display: flex;
+  position: relative;
+}
+/* body {
+  background: #CAF0F8 ;
+} */
+
+.main-header {
+  background: #90E0EF;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 40px;
+  margin: 18px 18px 32px 18px;
+}
+.header-title {
+  font-size: 2em;
+  font-weight: bold;
+  color: #03045E;
+  font-family: 'H7GBKHeavy', sans-serif;
+  letter-spacing: 1px;
+}
+.header-nav {
+  display: flex;
+  gap: 32px;
+}
+.header-link {
+  color: #023E8A;
+  text-decoration: none;
+  font-size: 1.1em;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.header-link:hover {
+  color: #0077B6;
+}
+
+/* Remove old navbar styles if not used elsewhere */
+.navbar, .navbar-title, .add-btn, .navbar-user, .user-avatar, .username, .logout-btn {
+  display: none !important;
+}
+
+.characters-section {
+  max-width: 1200px;
+  margin: 32px auto 0 auto;
+  background: transparent;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  /* padding: 0 20px; */
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+.tabs {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 18px;
+  margin-left: 8px;
+}
+.tab {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #0077B6;
+  background: transparent;
+  padding: 8px 18px;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.tab.active {
+  background: #ADE8F4;
+  color: #03045E;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.character-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: flex-start;
+}
+@media (max-width: 900px) {
+  .character-grid {
+    justify-content: center;
+  }
+  .main-header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 10px;
+  }
+}
+
+.my-masonry-grid {
+  display: flex;
+  margin-left: -20px;
+  width: auto;
+}
+
+.my-masonry-grid_column {
+  padding-left: 20px;
+  background-clip: padding-box;
+}
+
+.my-masonry-grid_column > div {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1100px) {
+  .my-masonry-grid_column {
+    width: calc(33.333% - 20px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .my-masonry-grid_column {
+    width: calc(50% - 20px) !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .my-masonry-grid_column {
+    width: calc(100% - 20px) !important;
+  }
+} 

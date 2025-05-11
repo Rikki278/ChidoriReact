@@ -20,12 +20,20 @@ const authSlice = createSlice({
     },
     setTokens: (state, action) => {
       const { accessToken, refreshToken } = action.payload;
+      
+      if (!accessToken || !refreshToken) {
+        console.error('Invalid tokens provided:', { accessToken, refreshToken });
+        return;
+      }
+
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
       
       // Store tokens in localStorage
-      if (accessToken) localStorage.setItem('accessToken', accessToken);
-      if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      
+      console.log('Tokens stored successfully');
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -44,10 +52,18 @@ const authSlice = createSlice({
       // Clear tokens from localStorage
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      
+      console.log('Logged out successfully');
     },
     updateAccessToken: (state, action) => {
+      if (!action.payload) {
+        console.error('Invalid access token provided for update');
+        return;
+      }
+      
       state.accessToken = action.payload;
       localStorage.setItem('accessToken', action.payload);
+      console.log('Access token updated successfully');
     },
   },
 });

@@ -1,17 +1,22 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
 import Register from './components/Register'
 import Login from './components/Login'
 import RainEffect from './components/RainEffect'
+import Home from './components/main/Home'
 
 function App() {
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
   return (
-    <div className="app">
-      <RainEffect />
+    <div className={isAuthPage ? 'app' : ''}>
+      {isAuthPage && <RainEffect />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
       </Routes>
     </div>
   )

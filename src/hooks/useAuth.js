@@ -44,11 +44,25 @@ export const useAuth = () => {
       validateCredentials(credentials);
       const response = await authAPI.login(credentials);
       
-      const { accessToken, refreshToken, user } = response;
-      dispatch(setTokens({ accessToken, refreshToken }));
-      dispatch(setUser(user));
+      if (!response.token || !response.refreshToken) {
+        throw new Error('Invalid response from server: missing tokens');
+      }
+
+      console.log('Login successful, storing tokens...');
+      dispatch(setTokens({ 
+        accessToken: response.token,
+        refreshToken: response.refreshToken 
+      }));
+      
+      // if (!response.user) {
+      //   throw new Error('Invalid response from server: missing user data');
+      // }
+      
+      dispatch(setUser(response.user));
+      console.log('Login process completed successfully');
       return true;
     } catch (error) {
+      console.error('Login error:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Login failed';
       dispatch(setError(errorMessage));
       return false;

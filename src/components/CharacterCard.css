@@ -1,0 +1,111 @@
+.character-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.character-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.character-image {
+  width: 100%;
+  object-fit: cover;
+}
+
+.character-info {
+  padding: 16px;
+}
+
+.character-title {
+  font-size: 1.6em;
+  font-weight: 600;
+  color: #03045E;
+  margin: 0 0 8px 0;
+}
+
+.character-anime {
+  font-size: 1.3em;
+  color: #0077B6;
+  margin-bottom: 8px;
+}
+
+.character-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.genre-tag {
+  background: #ADE8F4;
+  color: #03045E;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 1.1em;
+}
+
+.character-description {
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.5;
+  font-size: 1.1em;
+}
+
+.character-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+}
+
+.stat i {
+  color: #0077B6;
+}
+
+.stat i.favorited {
+  color: #FFD700;
+}
+
+.character-author {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.character-date {
+  font-size: 0.8em;
+  color: #999;
+  margin-bottom: 12px;
+}
+
+.character-link {
+  display: inline-block;
+  color: #0077B6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.character-link:hover {
+  color: #03045E;
+}
+
+.character-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: flex-start;
+  align-items: flex-start;
+} 
