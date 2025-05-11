@@ -1,11 +1,47 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { FastAverageColor } from 'fast-average-color';
 import './CharacterCard.css';
 
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
+
 const CharacterCard = ({ character }) => {
-  console.log('Character data:', character);
+  const imgRef = useRef(null);
+  const [dominantColor, setDominantColor] = useState('#00B4D8');
+  const [imgSrc, setImgSrc] = useState(character.characterImageUrl);
+
+  useEffect(() => {
+    setImgSrc(character.characterImageUrl);
+  }, [character.characterImageUrl]);
+
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete) {
+      extractColor();
+    }
+    // eslint-disable-next-line
+  }, [imgSrc]);
+
+  const extractColor = () => {
+    const img = imgRef.current;
+    if (img) {
+      const fac = new FastAverageColor();
+      fac.getColorAsync(img)
+        .then(color => {
+          setDominantColor(color.hex);
+        })
+        .catch(() => {});
+    }
+  };
+
+  const handleImageError = () => {
+    if (imgSrc !== DEFAULT_IMAGE) {
+      setImgSrc(DEFAULT_IMAGE);
+      setDominantColor('#00B4D8');
+    }
+  };
+
   const handleCardKeyDown = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      // Здесь можно добавить переход или действие по клику
       e.preventDefault();
     }
   };
@@ -15,18 +51,25 @@ const CharacterCard = ({ character }) => {
       className="card"
       tabIndex={0}
       aria-label={`Карточка персонажа ${character.characterName}`}
-      onClick={() => { /* Здесь можно добавить переход или действие по клику */ }}
+      onClick={() => {}}
       onKeyDown={handleCardKeyDown}
+      style={{
+        '--card-glow': dominantColor
+      }}
     >
       <div className="image-container">
         <img
-          src={character.characterImageUrl}
+          ref={imgRef}
+          src={imgSrc}
           alt={character.characterName}
           className="card-image"
+          crossOrigin="anonymous"
+          onLoad={extractColor}
+          onError={handleImageError}
         />
       </div>
       <div className="card-content">
-        <div className="character-name">{character.characterName}</div>
+        <div className="character-name" style={{ color: dominantColor }}>{character.characterName}</div>
         <div className="anime">{character.anime}</div>
         <div className="description">{character.description}</div>
         <div className="meta">

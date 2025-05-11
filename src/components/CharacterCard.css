@@ -21,8 +21,8 @@
 .card:focus {
   transform: translateY(-5px) scale(1.02);
   box-shadow:
-    0 0 24px 4px #00B4D8cc,
-    0 0 40px 8px #48CAE488;
+    0 0 24px 4px var(--card-glow, #00B4D8),
+    0 0 40px 8px var(--card-glow, #00B4D8);
 }
 
 @keyframes fadeInUp {
