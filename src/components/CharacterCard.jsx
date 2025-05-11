@@ -54,7 +54,7 @@ const CharacterCard = ({ character }) => {
       onClick={() => {}}
       onKeyDown={handleCardKeyDown}
       style={{
-        '--card-glow': dominantColor
+        '--card-glow': dominantColor,
       }}
     >
       <div className="image-container">
@@ -82,12 +82,18 @@ const CharacterCard = ({ character }) => {
             <span>@{character.author?.username || 'Unknown'}</span>
           </div>
           <div className="stats">
-            <span aria-label="Лайки">❤️ {character.likeCount}</span>
-            <span aria-label="Комментарии">💬 {character.commentCount}</span>
-            <span
-              aria-label="В избранном"
-              className={character.isFavorited ? 'favorited' : ''}
-            >★</span>
+            <span className="stat" aria-label="Лайки">
+              <svg width="20" height="20" fill="none" stroke="#ff5a9e" strokeWidth="2" viewBox="0 0 24 24" style={{ verticalAlign: 'middle', marginRight: 4 }}>
+                <path d="M12 21C12 21 4 13.5 4 8.5C4 5.5 6.5 3 9.5 3C11.04 3 12 4.5 12 4.5C12 4.5 12.96 3 14.5 3C17.5 3 20 5.5 20 8.5C20 13.5 12 21 12 21Z" />
+              </svg>
+              {character.likeCount}
+            </span>
+            <span className="stat" aria-label="Комментарии">
+              <svg width="20" height="20" fill="none" stroke="#90e0ef" strokeWidth="2" viewBox="0 0 24 24" style={{ verticalAlign: 'middle', marginRight: 4 }}>
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              {character.commentCount}
+            </span>
           </div>
         </div>
       </div>

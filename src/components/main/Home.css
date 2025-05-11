@@ -1,22 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
 .home-bg {
   min-height: 100vh;
-  background: #CAF0F8;
+  background: linear-gradient(120deg, #181a23, #23263a, #23263a, #181a23, #23263a);
+  background-size: 400% 400%;
+  animation: gradientMove 18s ease-in-out infinite;
   padding-bottom: 40px;
   display: flex;
   position: relative;
   flex-direction: column;
   padding-top: 90px;
 }
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.home-bg::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12;
+  background: url('https://www.transparenttextures.com/patterns/stardust.png');
+}
 /* body {
   background: #CAF0F8 ;
 } */
 
 .main-header {
-  background: rgba(144, 224, 239, 0.75);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(20,22,30,0.95);
+  color: #d0e4ff;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 24px 0 #000a;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -30,25 +51,43 @@
   z-index: 100;
 }
 .header-title {
-  font-size: 2em;
-  font-weight: bold;
-  color: #03045E;
-  font-family: 'H7GBKHeavy', sans-serif;
+  font-family: 'Orbitron', 'H7GBKHeavy', Arial, sans-serif;
+  font-size: 2.2em;
+  font-weight: 700;
+  color: #6effff;
+  letter-spacing: 2px;
+  text-shadow:
+    0 0 8px #00b4d8,
+    0 0 16px #6effff,
+    0 0 2px #fff;
+  -webkit-text-stroke: 1px #00b4d8;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  position: static;
+}
+.header-title-jp {
+  font-family: 'Orbitron', 'H7GBKHeavy', Arial, sans-serif;
+  font-size: 0.7em;
+  color: #90e0ef;
   letter-spacing: 1px;
+  margin-left: 10px;
+  position: static;
 }
 .header-nav {
   display: flex;
   gap: 32px;
 }
 .header-link {
-  color: #023E8A;
+  color: #d0e4ff;
   text-decoration: none;
   font-size: 1.1em;
   font-weight: 500;
   transition: color 0.2s;
 }
 .header-link:hover {
-  color: #0077B6;
+  color: #00b4d8;
+  text-shadow: 0 0 8px #00b4d8cc;
 }
 
 /* Remove old navbar styles if not used elsewhere */
@@ -129,6 +168,7 @@
   position: relative;
   z-index: 1;
   overflow: visible;
+  padding-bottom: 24px;
 }
 .tabs {
   display: flex;

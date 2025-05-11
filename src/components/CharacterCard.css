@@ -13,6 +13,8 @@
   transition: transform 0.4s, box-shadow 0.4s;
   animation: fadeInUp 1s ease forwards;
   width: 100%;
+  min-width: 320px;
+  max-width: 100%;
   box-sizing: border-box;
   z-index: 1;
 }
@@ -20,9 +22,7 @@
 .card:hover,
 .card:focus {
   transform: translateY(-5px) scale(1.02);
-  box-shadow:
-    0 0 24px 4px var(--card-glow, #00B4D8),
-    0 0 40px 8px var(--card-glow, #00B4D8);
+  box-shadow: 0 0 36px 0 var(--card-glow, #00B4D8), 0 0 12px 0 var(--card-glow, #00B4D8);
 }
 
 @keyframes fadeInUp {
@@ -56,7 +56,7 @@
 }
 
 .card-content {
-  padding: 1rem 1.2rem;
+  padding: 1.4rem 1.6rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -68,7 +68,7 @@
   font-size: 1.3rem;
   font-weight: 500;
   color: #6effff;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.5rem;
   text-shadow: 0 0 10px rgba(110, 255, 255, 0.3);
   text-align: left;
 }
@@ -76,7 +76,7 @@
 .anime {
   font-size: 0.9rem;
   color: #9aaac6;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
   text-align: left;
 }
 
@@ -90,16 +90,17 @@
 .description {
   font-size: 0.85rem;
   color: #d3e0f4;
-  line-height: 1.4;
+  line-height: 1.5;
   flex-grow: 1;
   text-align: left;
+  margin-bottom: 0.8rem;
 }
 
 .meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: 1.4rem;
   font-size: 0.8rem;
   color: #9caec9;
   text-align: left;
@@ -238,4 +239,8 @@
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.card-parallax-wrapper {
+  perspective: 800px;
 } 
