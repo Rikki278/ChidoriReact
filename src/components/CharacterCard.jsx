@@ -2,38 +2,51 @@ import React from 'react';
 import './CharacterCard.css';
 
 const CharacterCard = ({ character }) => {
+  console.log('Character data:', character);
+  const handleCardKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      // Здесь можно добавить переход или действие по клику
+      e.preventDefault();
+    }
+  };
+
   return (
-    <div className="character-card">
-      <img src={character.characterImageUrl} alt={character.characterName} className="character-image" />
-      <div className="character-info">
-        <h3 className="character-title">{character.characterName}</h3>
-        <div className="character-anime">{character.anime}</div>
-        <div className="character-genres">
-          {character.animeGenre?.map((genre, index) => (
-            <span key={index} className="genre-tag">{genre}</span>
-          ))}
+    <div
+      className="card"
+      tabIndex={0}
+      aria-label={`Карточка персонажа ${character.characterName}`}
+      onClick={() => { /* Здесь можно добавить переход или действие по клику */ }}
+      onKeyDown={handleCardKeyDown}
+    >
+      <div className="image-container">
+        <img
+          src={character.characterImageUrl}
+          alt={character.characterName}
+          className="card-image"
+        />
+      </div>
+      <div className="card-content">
+        <div className="character-name">{character.characterName}</div>
+        <div className="anime">{character.anime}</div>
+        <div className="description">{character.description}</div>
+        <div className="meta">
+          <div className="author-info">
+            <img
+              src={character.author?.profileImageUrl || 'https://via.placeholder.com/32'}
+              alt="Author avatar"
+              className="author-avatar"
+            />
+            <span>@{character.author?.username || 'Unknown'}</span>
+          </div>
+          <div className="stats">
+            <span aria-label="Лайки">❤️ {character.likeCount}</span>
+            <span aria-label="Комментарии">💬 {character.commentCount}</span>
+            <span
+              aria-label="В избранном"
+              className={character.isFavorited ? 'favorited' : ''}
+            >★</span>
+          </div>
         </div>
-        <div className="character-description">
-          {character.description}
-        </div>
-        <div className="character-stats">
-          <span className="stat">
-            <i className="fas fa-heart"></i> {character.likeCount}
-          </span>
-          <span className="stat">
-            <i className="fas fa-comment"></i> {character.commentCount}
-          </span>
-          <span className="stat">
-            <i className={`fas fa-star ${character.isFavorited ? 'favorited' : ''}`}></i>
-          </span>
-        </div>
-        <div className="character-author">
-          by {character.author?.username || 'Unknown'}
-        </div>
-        <div className="character-date">
-          Posted {new Date(character.createdAt).toLocaleDateString()}
-        </div>
-        <a href="#" className="character-link">View Post</a>
       </div>
     </div>
   );

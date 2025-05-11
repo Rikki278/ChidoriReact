@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Masonry from 'react-masonry-css';
 import CharacterCard from '../CharacterCard';
 import './Home.css';
-import Sidebar from '../Sidebar';
 import { postsAPI } from '../../services/api';
 
 const Home = () => {
@@ -37,7 +36,6 @@ const Home = () => {
   if (loading) {
     return (
       <div className="home-bg">
-        <Sidebar />
         <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div className="loading">Loading posts...</div>
         </div>
@@ -48,7 +46,6 @@ const Home = () => {
   if (error) {
     return (
       <div className="home-bg">
-        <Sidebar />
         <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div className="error">{error}</div>
         </div>
@@ -57,18 +54,17 @@ const Home = () => {
   }
 
   return (
-    <div className="home-bg" style={{ display: 'flex', minHeight: '100vh' }}>
-      <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <header className="main-header">
-          <div className="header-title">CreativeLab</div>
-          <nav className="header-nav">
-            <a href="#" className="header-link">Home</a>
-            <a href="#" className="header-link">Favorites</a>
-            <a href="#" className="header-link">Chat</a>
-            <a href="#" className="header-link">Profile</a>
-          </nav>
-        </header>
+    <div className="home-bg" style={{ minHeight: '100vh', position: 'relative' }}>
+      <header className="main-header main-header-full">
+        <div className="header-title">CreativeLab</div>
+        <nav className="header-nav">
+          <a href="#" className="header-link">Home</a>
+          <a href="#" className="header-link">Favorites</a>
+          <a href="#" className="header-link">Chat</a>
+          <a href="#" className="header-link">Profile</a>
+        </nav>
+      </header>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '90px' }}>
         <div className="characters-section">
           <Masonry
             breakpointCols={breakpointColumns}

@@ -4,20 +4,30 @@
   padding-bottom: 40px;
   display: flex;
   position: relative;
+  flex-direction: column;
+  padding-top: 90px;
 }
 /* body {
   background: #CAF0F8 ;
 } */
 
 .main-header {
-  background: #90E0EF;
+  background: rgba(144, 224, 239, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 18px 40px;
-  margin: 18px 18px 32px 18px;
+  margin: 18px 18px 0 18px;
+  width: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
 }
 .header-title {
   font-size: 2em;
@@ -46,15 +56,76 @@
   display: none !important;
 }
 
+.sidebar-toggle {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+}
+.hamburger {
+  width: 28px;
+  height: 3px;
+  background: #0077B6;
+  border-radius: 2px;
+  position: relative;
+  display: block;
+}
+.hamburger::before, .hamburger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 28px;
+  height: 3px;
+  background: #0077B6;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+.hamburger::before {
+  top: -9px;
+}
+.hamburger::after {
+  top: 9px;
+}
+
+.sidebar-drawer {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  height: 100vh;
+  width: 260px;
+  z-index: 200;
+  background: transparent;
+  transition: left 0.35s cubic-bezier(.4,0,.2,1);
+  box-shadow: 2px 0 24px 0 rgba(0,0,0,0.12);
+}
+.sidebar-drawer.open {
+  left: 0;
+}
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.25);
+  z-index: 150;
+  transition: background 0.3s;
+}
+
 .characters-section {
   max-width: 1200px;
-  margin: 32px auto 0 auto;
+  margin: 2px auto 0 auto;
   background: transparent;
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  /* padding: 0 20px; */
   position: relative;
   z-index: 1;
   overflow: visible;
@@ -90,7 +161,7 @@
   .character-grid {
     justify-content: center;
   }
-  .main-header {
+  .main-header-full {
     flex-direction: column;
     gap: 10px;
     padding: 18px 10px;
