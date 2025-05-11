@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Masonry from 'react-masonry-css';
 import CharacterCard from '../CharacterCard';
 import './Home.css';
-import Sidebar from '../Sidebar';
+import ChidoriBackground from '../ChidoriBackground';
 import { postsAPI } from '../../services/api';
+import Tilt from 'react-parallax-tilt';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -28,7 +29,8 @@ const Home = () => {
   }, []);
 
   const breakpointColumns = {
-    default: 4,
+    default: 5,
+    1400: 4,
     1100: 3,
     700: 2,
     500: 1
@@ -37,7 +39,7 @@ const Home = () => {
   if (loading) {
     return (
       <div className="home-bg">
-        <Sidebar />
+        <ChidoriBackground />
         <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div className="loading">Loading posts...</div>
         </div>
@@ -48,7 +50,7 @@ const Home = () => {
   if (error) {
     return (
       <div className="home-bg">
-        <Sidebar />
+        <ChidoriBackground />
         <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div className="error">{error}</div>
         </div>
@@ -57,18 +59,21 @@ const Home = () => {
   }
 
   return (
-    <div className="home-bg" style={{ display: 'flex', minHeight: '100vh' }}>
-      <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <header className="main-header">
-          <div className="header-title">CreativeLab</div>
-          <nav className="header-nav">
-            <a href="#" className="header-link">Home</a>
-            <a href="#" className="header-link">Favorites</a>
-            <a href="#" className="header-link">Chat</a>
-            <a href="#" className="header-link">Profile</a>
-          </nav>
-        </header>
+    <div className="home-bg" style={{ minHeight: '100vh', position: 'relative' }}>
+      <ChidoriBackground />
+      <header className="main-header main-header-full">
+        <div className="header-title">
+          Chidori
+          <span className="header-title-jp">千鳥</span>
+        </div>
+        <nav className="header-nav">
+          <a href="#" className="header-link">Home</a>
+          <a href="#" className="header-link">Favorites</a>
+          <a href="#" className="header-link">Chat</a>
+          <a href="#" className="header-link">Profile</a>
+        </nav>
+      </header>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '90px' }}>
         <div className="characters-section">
           <Masonry
             breakpointCols={breakpointColumns}
@@ -76,10 +81,21 @@ const Home = () => {
             columnClassName="my-masonry-grid_column"
           >
             {posts.map((post) => (
-              <CharacterCard
+              <Tilt
                 key={post.id}
-                character={post}
-              />
+                glareEnable={true}
+                glareMaxOpacity={0.10}
+                glareColor="#fff"
+                glarePosition="all"
+                tiltMaxAngleX={5}
+                tiltMaxAngleY={5}
+                scale={0.98}
+                tiltReverse={true}
+                transitionSpeed={1200}
+                style={{ borderRadius: 16, marginBottom: 20 }}
+              >
+                <CharacterCard character={post} />
+              </Tilt>
             ))}
           </Masonry>
         </div>

@@ -4,13 +4,6 @@ import './Sidebar.css';
 const Sidebar = () => {
   return (
     <aside className="sidebar">
-      <div className="sidebar-logo">
-        <div className="sidebar-logo-icon">EN</div>
-        <div>
-          <div className="sidebar-logo-title">Echo</div>
-          <div className="sidebar-logo-subtitle">Network</div>
-        </div>
-      </div>
       <nav className="sidebar-nav">
         <a className="sidebar-link active" href="#"><span role="img" aria-label="home">🏠</span> Home</a>
         <a className="sidebar-link" href="#"><span role="img" aria-label="explore">🔍</span> Explore</a>
