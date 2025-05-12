@@ -1,0 +1,216 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.modal-content {
+  background: linear-gradient(180deg, rgba(20, 22, 30, 0.97), rgba(12, 14, 20, 0.93));
+  border: 1px solid rgba(100, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(100, 255, 255, 0.08);
+  padding: 32px 24px 24px 24px;
+  min-width: 340px;
+  max-width: 95vw;
+  position: relative;
+  outline: none;
+  color: #d3e0f4;
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  color: #6effff;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+  color: #00B4D8;
+}
+
+.form-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: #6effff;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group textarea {
+  background: rgba(30, 34, 44, 0.95);
+  color: #d3e0f4;
+  border: 1px solid #3bc9db;
+  border-radius: 8px;
+  font-size: 15px;
+  padding: 8px 10px;
+  outline: none;
+  margin-bottom: 2px;
+  transition: border 0.2s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+  border: 1.5px solid #6effff;
+}
+
+.form-group input[disabled] {
+  background: #23293a;
+  color: #8fd7ff;
+}
+
+.form-group textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+.form-error {
+  color: #ff5a9e;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.form-submit-btn,
+.custom-file-label {
+  background: linear-gradient(90deg, #00B4D8 0%, #6effff 100%);
+  color: #181c24;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.18s, transform 0.18s;
+  box-shadow: 0 2px 8px rgba(0,180,216,0.08);
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.form-submit-btn {
+  padding: 10px 20px;
+  margin-top: 8px;
+}
+
+.custom-file-label {
+  background: linear-gradient(90deg, #6effff 0%, #00B4D8 100%);
+  color: #181c24 !important;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-block;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.18s, transform 0.18s;
+  box-shadow: 0 2px 8px rgba(0,180,216,0.08);
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.12);
+}
+
+.form-submit-btn:hover, .form-submit-btn:focus,
+.custom-file-label:hover, .custom-file-label:focus {
+  background: linear-gradient(90deg, #00B4D8 0%, #6effff 100%);
+  color: #6effff;
+  box-shadow: 0 0 14px #6effff, 0 0 5px #00B4D8;
+  transform: scale(1.03);
+}
+
+.form-submit-btn:active,
+.custom-file-label:active {
+  transform: scale(0.97);
+  box-shadow: 0 0 6px #00B4D8;
+}
+
+.form-submit-btn:disabled {
+  background: #90caf9;
+  color: #23293a;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.form-loading {
+  position: absolute;
+  right: 10px;
+  top: 36px;
+  font-size: 13px;
+  color: #6effff;
+}
+
+.anime-dropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 60px;
+  background: linear-gradient(180deg, rgba(20, 22, 30, 0.97), rgba(12, 14, 20, 0.93));
+  border: 1px solid #3bc9db;
+  border-radius: 0 0 12px 12px;
+  z-index: 20;
+  max-height: 180px;
+  overflow-y: auto;
+  box-shadow: 0 2px 12px rgba(0,180,216,0.12);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.anime-dropdown li {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #6effff;
+  border-bottom: 1px solid rgba(100,255,255,0.07);
+  transition: background 0.18s, color 0.18s;
+}
+
+.anime-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.anime-dropdown li:hover,
+.anime-dropdown li:focus {
+  background: #23293a;
+  color: #00B4D8;
+  outline: none;
+}
+
+.form-submit-error {
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.custom-file-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+} 

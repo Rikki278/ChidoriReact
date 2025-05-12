@@ -5,11 +5,14 @@ import './Home.css';
 import ChidoriBackground from '../ChidoriBackground';
 import { postsAPI } from '../../services/api';
 import Tilt from 'react-parallax-tilt';
+import CreatePostButton from './CreatePostButton';
+import CreatePostModal from './CreatePostModal';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -27,6 +30,15 @@ const Home = () => {
 
     fetchPosts();
   }, []);
+
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+  const handlePostCreated = () => {
+    // Optionally refresh posts after creating a new one
+    setModalOpen(false);
+    // You can call fetchPosts here if you want to refresh the list
+    // fetchPosts();
+  };
 
   const breakpointColumns = {
     default: 5,
@@ -100,6 +112,12 @@ const Home = () => {
           </Masonry>
         </div>
       </div>
+      <CreatePostButton onOpen={handleOpenModal} />
+      <CreatePostModal
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+        onPostCreated={handlePostCreated}
+      />
     </div>
   );
 };
