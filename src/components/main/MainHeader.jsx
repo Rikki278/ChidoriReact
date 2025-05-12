@@ -4,6 +4,7 @@ import './Home.css';
 
 const MainHeader = () => {
   const location = useLocation();
+  const isAnimePage = /^\/anime\//.test(location.pathname);
   return (
     <header className="main-header main-header-full">
       <div className="header-title">
@@ -12,6 +13,9 @@ const MainHeader = () => {
       </div>
       <nav className="header-nav">
         <Link to="/home" className="header-link" tabIndex={0} aria-label="Go to Home" style={{ fontWeight: 700, color: location.pathname === '/home' ? '#6effff' : undefined }}>Home</Link>
+        {!isAnimePage && (
+          <Link to="/profile" className="header-link" tabIndex={0} aria-label="Go to Profile" style={{ fontWeight: 700, color: location.pathname === '/profile' ? '#6effff' : undefined }}>Profile</Link>
+        )}
         {/* <a href="#" className="header-link">Favorites</a>
         <a href="#" className="header-link">Chat</a>
         <a href="#" className="header-link">Profile</a> */}

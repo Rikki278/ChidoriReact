@@ -8,6 +8,7 @@ import Tilt from 'react-parallax-tilt';
 import CreatePostButton from './CreatePostButton';
 import CreatePostModal from './CreatePostModal';
 import PostDetailsModal from './PostDetailsModal';
+import { Link, useLocation } from 'react-router-dom';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -16,6 +17,8 @@ const Home = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
+  const location = useLocation();
+  const isAnimePage = location.pathname.startsWith('/anime/');
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -91,10 +94,26 @@ const Home = () => {
           <span className="header-title-jp">千鳥</span>
         </div>
         <nav className="header-nav">
-          <a href="#" className="header-link">Home</a>
-          <a href="#" className="header-link">Favorites</a>
-          <a href="#" className="header-link">Chat</a>
-          <a href="#" className="header-link">Profile</a>
+          <Link
+            to="/"
+            className="header-link"
+            aria-label="Home"
+            tabIndex={0}
+          >
+            Home
+          </Link>
+          {/* <Link to="/favorites" className="header-link" aria-label="Favorites" tabIndex={0}>Favorites</Link> */}
+          {/* <Link to="/chat" className="header-link" aria-label="Chat" tabIndex={0}>Chat</Link> */}
+          {!isAnimePage && (
+            <Link
+              to="/profile"
+              className="header-link"
+              aria-label="Profile"
+              tabIndex={0}
+            >
+              Profile
+            </Link>
+          )}
         </nav>
       </header>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '90px' }}>
