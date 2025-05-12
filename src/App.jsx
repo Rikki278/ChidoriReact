@@ -4,6 +4,7 @@ import Register from './components/Register'
 import Login from './components/Login'
 import RainEffect from './components/RainEffect'
 import Home from './components/main/Home'
+import AnimeFullInfoPage from './pages/AnimeFullInfoPage'
 
 function App() {
   const location = useLocation();
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/anime/:title" element={<AnimeFullInfoPage />} />
         <Route path="/" element={<Navigate to="/home" replace />} />
       </Routes>
     </div>

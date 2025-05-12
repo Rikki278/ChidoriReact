@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './PostDetailsModal.css';
+import { Link } from 'react-router-dom';
 
 const getToken = () => localStorage.getItem('accessToken');
 
@@ -182,7 +183,7 @@ const PostDetailsModal = ({ postId, isOpen, onClose }) => {
               </div>
               <div className="post-modal-fields">
                 <div className="post-modal-field"><span className="post-modal-label">Name:</span> {post.characterName}</div>
-                <div className="post-modal-field"><span className="post-modal-label">Anime:</span> <span className="post-modal-genre-tag">{post.anime}</span></div>
+                <div className="post-modal-field"><span className="post-modal-label">Anime:</span> <Link to={`/anime/${encodeURIComponent(post.anime)}`} className="post-modal-genre-tag" tabIndex={0} aria-label={`Show full info for ${post.anime}`}>{post.anime}</Link></div>
                 <div className="post-modal-field"><span className="post-modal-label">Genres:</span> {post.animeGenre.map((g, i) => (
                   <span key={g + i} className="post-modal-genre-text">{g}</span>
                 ))}</div>
