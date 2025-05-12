@@ -4,7 +4,7 @@ import './CharacterCard.css';
 
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
 
-const CharacterCard = ({ character }) => {
+const CharacterCard = ({ character, onClick }) => {
   const imgRef = useRef(null);
   const [dominantColor, setDominantColor] = useState('#00B4D8');
   const [imgSrc, setImgSrc] = useState(character.characterImageUrl);
@@ -43,6 +43,7 @@ const CharacterCard = ({ character }) => {
   const handleCardKeyDown = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
+      if (onClick) onClick();
     }
   };
 
@@ -51,7 +52,7 @@ const CharacterCard = ({ character }) => {
       className="card"
       tabIndex={0}
       aria-label={`Карточка персонажа ${character.characterName}`}
-      onClick={() => {}}
+      onClick={onClick}
       onKeyDown={handleCardKeyDown}
       style={{
         '--card-glow': dominantColor,

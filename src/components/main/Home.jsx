@@ -7,12 +7,15 @@ import { postsAPI } from '../../services/api';
 import Tilt from 'react-parallax-tilt';
 import CreatePostButton from './CreatePostButton';
 import CreatePostModal from './CreatePostModal';
+import PostDetailsModal from './PostDetailsModal';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -38,6 +41,15 @@ const Home = () => {
     setModalOpen(false);
     // You can call fetchPosts here if you want to refresh the list
     // fetchPosts();
+  };
+
+  const handleCardClick = (postId) => {
+    setSelectedPostId(postId);
+    setDetailsModalOpen(true);
+  };
+  const handleCloseDetailsModal = () => {
+    setDetailsModalOpen(false);
+    setSelectedPostId(null);
   };
 
   const breakpointColumns = {
@@ -106,7 +118,7 @@ const Home = () => {
                 transitionSpeed={1200}
                 style={{ borderRadius: 16, marginBottom: 20 }}
               >
-                <CharacterCard character={post} />
+                <CharacterCard character={post} onClick={() => handleCardClick(post.id)} />
               </Tilt>
             ))}
           </Masonry>
@@ -117,6 +129,11 @@ const Home = () => {
         isOpen={modalOpen}
         onClose={handleCloseModal}
         onPostCreated={handlePostCreated}
+      />
+      <PostDetailsModal
+        postId={selectedPostId}
+        isOpen={detailsModalOpen}
+        onClose={handleCloseDetailsModal}
       />
     </div>
   );
