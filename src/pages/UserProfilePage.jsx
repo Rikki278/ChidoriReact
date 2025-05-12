@@ -33,6 +33,26 @@ const getDominantColor = (imgUrl, callback) => {
   };
 };
 
+const getTimeAgo = (dateString) => {
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffMs = now - date;
+  const diffSec = Math.floor(diffMs / 1000);
+  if (diffSec < 60) return 'just now';
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin} minute${diffMin === 1 ? '' : 's'} ago`;
+  const diffH = Math.floor(diffMin / 60);
+  if (diffH < 24) return `${diffH} hour${diffH === 1 ? '' : 's'} ago`;
+  const diffD = Math.floor(diffH / 24);
+  if (diffD < 7) return `${diffD} day${diffD === 1 ? '' : 's'} ago`;
+  const diffW = Math.floor(diffD / 7);
+  if (diffW < 5) return `${diffW} week${diffW === 1 ? '' : 's'} ago`;
+  const diffM = Math.floor(diffD / 30);
+  if (diffM < 12) return `${diffM} month${diffM === 1 ? '' : 's'} ago`;
+  const diffY = Math.floor(diffD / 365);
+  return `${diffY} year${diffY === 1 ? '' : 's'} ago`;
+};
+
 const UserProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -86,7 +106,7 @@ const UserProfilePage = () => {
               {profile.bio && <div className="user-profile-bio">{profile.bio}</div>}
               <div className="user-profile-dates">
                 <span>Joined: {new Date(profile.createdAt).toLocaleDateString()}</span>
-                <span>Last login: {new Date(profile.lastLogin).toLocaleDateString()}</span>
+                <span>Last login: {getTimeAgo(profile.lastLogin)}</span>
               </div>
             </div>
             <div className="user-profile-posts-block">
