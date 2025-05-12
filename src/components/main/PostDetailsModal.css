@@ -174,7 +174,7 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  margin-bottom: 18px;
+  margin-bottom: 8px;
 }
 
 .post-modal-action-btn {
@@ -293,8 +293,13 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: 420px;
+  max-height: 390px;
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.post-modal-comments-list::-webkit-scrollbar {
+  display: none;
 }
 
 .post-modal-comment-item {
@@ -302,6 +307,13 @@
   align-items: flex-start;
   gap: 10px;
   margin-bottom: 10px;
+}
+
+.post-modal-comment-main {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
 }
 
 .post-modal-comment-avatar {
@@ -312,22 +324,64 @@
   border: 2px solid #6effff;
 }
 
+.post-modal-comment-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
 .post-modal-comment-author {
   color: #6effff;
   font-weight: 600;
   margin-right: 8px;
+  text-align: left;
 }
 
 .post-modal-comment-date {
   color: #8fd7ff;
   font-size: 0.95em;
   margin-left: 4px;
+  text-align: left;
+}
+
+.post-modal-comment-delete {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  background: #181c24;
+  border: 1.5px solid #ff5a9e;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin-left: auto;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 0 8px #ff5a9e44;
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+.post-modal-comment-delete svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+.post-modal-comment-delete:hover,
+.post-modal-comment-delete:focus {
+  background: #2a0a18;
+  border-color: #ff5a9e;
+  box-shadow: 0 0 16px #ff5a9e, 0 0 4px #ff5a9e99;
+  transform: scale(1.08);
 }
 
 .post-modal-comment-content {
   color: #d3e0f4;
   font-size: 1em;
   margin-top: 2px;
+  text-align: left;
+  word-break: break-word;
 }
 
 .post-modal-loader {
@@ -348,6 +402,14 @@
   text-align: left !important;
   align-items: flex-start !important;
   justify-content: flex-start !important;
+}
+
+.post-modal-field:not(:last-child) {
+  margin-bottom: 18px;
+}
+
+.post-modal-field:last-child {
+  margin-bottom: 24px;
 }
 
 @media (max-width: 900px) {

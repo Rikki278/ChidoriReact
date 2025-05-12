@@ -132,6 +132,31 @@ const PostDetailsModal = ({ postId, isOpen, onClose }) => {
     }
   };
 
+  const decodeJwt = (token) => {
+    if (!token) return {};
+    try {
+      const payload = token.split('.')[1];
+      return JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+    } catch {
+      return {};
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (!post) return;
+    try {
+      const token = getToken();
+      await fetch(`/api/posts/${post.id}/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      setComments(comments => comments.filter(c => c.id !== commentId));
+      setPost(post => ({ ...post, commentCount: post.commentCount - 1 }));
+    } catch {
+      // Можно показать ошибку
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -148,20 +173,20 @@ const PostDetailsModal = ({ postId, isOpen, onClose }) => {
               <img src={post.characterImageUrl} alt={post.characterName} className="post-modal-image" />
             </div>
             <div className="post-modal-info-block">
-              <div className="post-modal-fields">
-                <div className="post-modal-field"><span className="post-modal-label">Name:</span> {post.characterName}</div>
-                <div className="post-modal-field"><span className="post-modal-label">Anime:</span> {post.anime}</div>
-                <div className="post-modal-field"><span className="post-modal-label">Genres:</span> {post.animeGenre.map((g, i) => (
-                  <span className="post-modal-genre-tag" key={g + i}>{g}</span>
-                ))}</div>
-                <div className="post-modal-field"><span className="post-modal-label">Description:</span> {post.description}</div>
-              </div>
-              <div className="post-modal-meta-row">
+              <div className="post-modal-meta-row" style={{ marginBottom: 24 }}>
                 <div className="post-modal-author">
                   <img src={post.author?.profileImageUrl} alt="author" className="post-modal-author-avatar" />
                   <span>@{post.author?.username}</span>
                 </div>
                 <span className="post-modal-date">{new Date(post.createdAt).toLocaleString()}</span>
+              </div>
+              <div className="post-modal-fields">
+                <div className="post-modal-field"><span className="post-modal-label">Name:</span> {post.characterName}</div>
+                <div className="post-modal-field"><span className="post-modal-label">Anime:</span> <span className="post-modal-genre-tag">{post.anime}</span></div>
+                <div className="post-modal-field"><span className="post-modal-label">Genres:</span> {post.animeGenre.map((g, i) => (
+                  <span key={g + i} className="post-modal-genre-text">{g}</span>
+                ))}</div>
+                <div className="post-modal-field"><span className="post-modal-label">Description:</span> {post.description}</div>
               </div>
               <div className="post-modal-actions-row">
                 <button className={`post-modal-action-btn${post.liked ? ' active' : ''}`} onClick={handleLike} disabled={likeLoading} aria-label="Like post">
@@ -196,9 +221,16 @@ const PostDetailsModal = ({ postId, isOpen, onClose }) => {
                     {comments.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((c) => (
                       <li key={c.id} className="post-modal-comment-item">
                         <img src={c.author?.profileImageUrl} alt="author" className="post-modal-comment-avatar" />
-                        <div>
-                          <span className="post-modal-comment-author">@{c.author?.username}</span>
-                          <span className="post-modal-comment-date">{new Date(c.createdAt).toLocaleString()}</span>
+                        <div className="post-modal-comment-main">
+                          <div className="post-modal-comment-header-row">
+                            <span className="post-modal-comment-author">@{c.author?.username}</span>
+                            <span className="post-modal-comment-date">{new Date(c.createdAt).toLocaleString()}</span>
+                            {c.author?.email === decodeJwt(getToken()).sub && (
+                              <button className="post-modal-comment-delete" aria-label="Delete comment" onClick={() => handleDeleteComment(c.id)}>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff5a9e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><line x1="9" y1="10" x2="9" y2="16"/><line x1="15" y1="10" x2="15" y2="16"/><line x1="10" y1="4" x2="14" y2="4"/></svg>
+                              </button>
+                            )}
+                          </div>
                           <div className="post-modal-comment-content">{c.content}</div>
                         </div>
                       </li>
