@@ -46,6 +46,8 @@
   cursor: pointer;
   z-index: 2;
   transition: color 0.18s;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 .post-modal-close:hover {
   color: #00B4D8;
@@ -130,6 +132,7 @@
   border-radius: 5px;
   font-size: 1em;
   font-weight: 500;
+  margin-right: 12px;
 }
 
 .post-modal-description {
@@ -290,7 +293,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: 180px;
+  max-height: 420px;
   overflow-y: auto;
 }
 

@@ -193,7 +193,7 @@ const PostDetailsModal = ({ postId, isOpen, onClose }) => {
                   <div className="post-modal-error">{commentError}</div>
                 ) : (
                   <ul className="post-modal-comments-list">
-                    {comments.map((c) => (
+                    {comments.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((c) => (
                       <li key={c.id} className="post-modal-comment-item">
                         <img src={c.author?.profileImageUrl} alt="author" className="post-modal-comment-avatar" />
                         <div>
