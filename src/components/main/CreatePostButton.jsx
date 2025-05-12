@@ -1,4 +1,5 @@
 import React from 'react';
+import './CreatePostButton.css';
 
 const CreatePostButton = ({ onOpen }) => {
   const handleKeyDown = (event) => {
@@ -15,26 +16,12 @@ const CreatePostButton = ({ onOpen }) => {
       tabIndex={0}
       onClick={onOpen}
       onKeyDown={handleKeyDown}
-      style={{
-        position: 'fixed',
-        bottom: '32px',
-        right: '32px',
-        width: '64px',
-        height: '64px',
-        borderRadius: '50%',
-        backgroundColor: '#1976d2',
-        color: '#fff',
-        border: 'none',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-        fontSize: '32px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        zIndex: 1000,
-      }}
     >
-      +
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="18" fill="none" />
+        <rect x="16" y="8" width="4" height="20" rx="2" fill="#6effff" />
+        <rect x="8" y="16" width="20" height="4" rx="2" fill="#6effff" />
+      </svg>
     </button>
   );
 };

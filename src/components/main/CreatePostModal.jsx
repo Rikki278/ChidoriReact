@@ -17,6 +17,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
   const [submitError, setSubmitError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const animeDropdownRef = useRef(null);
+  const [animeSelected, setAnimeSelected] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -35,6 +36,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
   }, [isOpen]);
 
   useEffect(() => {
+    if (animeSelected) return;
     if (anime.length < 1) {
       setAnimeOptions([]);
       setShowAnimeDropdown(false);
@@ -78,12 +80,14 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
       clearTimeout(timeout);
       controller.abort();
     };
-  }, [anime]);
+  }, [anime, animeSelected]);
 
   const handleAnimeSelect = (option) => {
     setAnime(option.title);
     setAnimeGenre(option.genres);
     setShowAnimeDropdown(false);
+    setAnimeOptions([]);
+    setAnimeSelected(true);
   };
 
   const validate = () => {
@@ -151,14 +155,6 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
   return isOpen ? (
     <div className="modal-backdrop" tabIndex={-1} aria-modal="true" role="dialog" onClick={handleBackdropClick}>
       <div className="modal-content" ref={modalRef} tabIndex={0}>
-        <button
-          className="modal-close-btn"
-          aria-label="Close modal"
-          onClick={onClose}
-          tabIndex={0}
-        >
-          &times;
-        </button>
         <h2>Create New Post</h2>
         <form onSubmit={handleSubmit} autoComplete="off" noValidate>
           <div className="form-group">
@@ -183,12 +179,13 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
               onChange={e => {
                 setAnime(e.target.value);
                 setAnimeGenre([]);
+                setAnimeSelected(false);
               }}
               aria-invalid={!!errors.anime}
               aria-describedby="anime-error"
               autoComplete="off"
               required
-              onFocus={() => animeOptions.length && setShowAnimeDropdown(true)}
+              onFocus={() => animeOptions.length > 0 && setShowAnimeDropdown(true)}
             />
             {animeLoading && <div className="form-loading">Loading...</div>}
             {showAnimeDropdown && animeOptions.length > 0 && (
@@ -237,15 +234,21 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
           </div>
           <div className="form-group">
             <label htmlFor="characterImage">Character Image</label>
-            <input
-              id="characterImage"
-              type="file"
-              accept="image/*"
-              onChange={e => setCharacterImage(e.target.files[0])}
-              aria-invalid={!!errors.characterImage}
-              aria-describedby="characterImage-error"
-              required
-            />
+            <div className="custom-file-input-wrapper">
+              <input
+                id="characterImage"
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={e => setCharacterImage(e.target.files[0])}
+                aria-invalid={!!errors.characterImage}
+                aria-describedby="characterImage-error"
+                required
+              />
+              <label htmlFor="characterImage" className="custom-file-label">
+                {characterImage ? characterImage.name : 'No file chosen'}
+              </label>
+            </div>
             {errors.characterImage && <div className="form-error" id="characterImage-error">{errors.characterImage}</div>}
           </div>
           {submitError && <div className="form-error form-submit-error">{submitError}</div>}
