@@ -5,33 +5,10 @@ import PostDetailsModal from '../components/main/PostDetailsModal';
 import Tilt from 'react-parallax-tilt';
 import ProfilePostCard from './ProfilePostCard';
 import './UserProfilePage.css';
+import Lottie from 'lottie-react';
+import lightningLottie from '../assets/animation/Animation - 1746823194589.json';
 
 const getToken = () => localStorage.getItem('accessToken');
-
-const getDominantColor = (imgUrl, callback) => {
-  const img = new window.Image();
-  img.crossOrigin = 'anonymous';
-  img.src = imgUrl;
-  img.onload = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    let r = 0, g = 0, b = 0, count = 0;
-    for (let i = 0; i < data.length; i += 4) {
-      r += data[i];
-      g += data[i + 1];
-      b += data[i + 2];
-      count++;
-    }
-    r = Math.round(r / count);
-    g = Math.round(g / count);
-    b = Math.round(b / count);
-    callback(`rgba(${r},${g},${b},0.85)`);
-  };
-};
 
 const getTimeAgo = (dateString) => {
   const now = new Date();
@@ -59,6 +36,8 @@ const UserProfilePage = () => {
   const [error, setError] = useState('');
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     setLoading(true);
@@ -87,19 +66,124 @@ const UserProfilePage = () => {
     setSelectedPostId(null);
   };
 
+  const handleAvatarEditClick = () => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  };
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setAvatarUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/users/profile/picture', {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${getToken()}` },
+        body: formData,
+      });
+      if (!res.ok) throw new Error('Failed to update avatar');
+      // После успешного обновления — перезапрашиваем профиль
+      try {
+        const profileRes = await fetch('/api/users/profile-posts', {
+          headers: { 'Authorization': `Bearer ${getToken()}` },
+        });
+        if (!profileRes.ok) throw new Error('Failed to reload profile');
+        const newProfile = await profileRes.json();
+        setProfile(newProfile);
+      } catch {
+        alert('Avatar updated, but failed to reload profile');
+      }
+    } catch {
+      alert('Failed to update avatar');
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
   return (
     <div className="home-bg" style={{ minHeight: '100vh', position: 'relative' }}>
       <ChidoriBackground />
       <MainHeader />
       <div className="user-profile-root">
         {loading ? (
-          <div className="user-profile-loader">Loading...</div>
+          <div className="user-profile-loader" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 220 }}>
+            <Lottie
+              animationData={lightningLottie}
+              loop
+              autoplay
+              style={{ height: 120, width: 120, filter: 'drop-shadow(0 0 24px #6effff) drop-shadow(0 0 48px #00b4d8)' }}
+            />
+            <div style={{ color: '#6effff', marginTop: 12, fontWeight: 500 }}>Loading...</div>
+          </div>
         ) : error ? (
           <div className="user-profile-error">{error}</div>
         ) : profile && (
           <div className="user-profile-content">
             <div className="user-profile-info">
-              <img src={profile.profileImageUrl} alt="avatar" className="user-profile-avatar" />
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <img src={profile.profileImageUrl} alt="avatar" className="user-profile-avatar" />
+                {avatarUploading && (
+                  <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'rgba(10,16,32,0.55)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '50%',
+                    zIndex: 3,
+                  }}>
+                    <Lottie
+                      animationData={lightningLottie}
+                      loop
+                      autoplay
+                      style={{ height: 64, width: 64, filter: 'drop-shadow(0 0 16px #6effff) drop-shadow(0 0 32px #00b4d8)' }}
+                    />
+                  </div>
+                )}
+                <button
+                  type="button"
+                  className="avatar-edit-btn"
+                  aria-label="Change avatar"
+                  tabIndex={0}
+                  onClick={handleAvatarEditClick}
+                  disabled={avatarUploading}
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    right: 0,
+                    background: 'transparent',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: 36,
+                    height: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: '#6effff',
+                    boxShadow: 'none',
+                    zIndex: 2,
+                  }}
+                >
+                  <span style={{
+                    fontSize: 28,
+                    color: '#6effff',
+                    filter: 'drop-shadow(0 0 8px #6effff) drop-shadow(0 0 16px #00b4d8)',
+                    WebkitTextStroke: '1px #00b4d8',
+                  }}>📷</span>
+                </button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                  onChange={handleAvatarChange}
+                  disabled={avatarUploading}
+                  aria-label="Upload new avatar"
+                />
+              </div>
               <div className="user-profile-username">@{profile.username}</div>
               <div className="user-profile-name">{profile.firstName} {profile.lastName}</div>
               <div className="user-profile-email">{profile.email}</div>
