@@ -41,35 +41,37 @@ const AnimeFullInfoPage = () => {
           <div className="anime-fullinfo-info-block">
             <div className="anime-fullinfo-title-row">
               <span className="anime-fullinfo-title">{anime.title}</span>
-              {anime.japaneseTitle && <span className="anime-fullinfo-jptitle">{anime.japaneseTitle}</span>}
+            </div>
+            {anime.japaneseTitle && (
+              <div className="anime-fullinfo-jptitle">{anime.japaneseTitle}</div>
+            )}
+            <div className="anime-fullinfo-trailer-block" style={{ display: 'flex', alignItems: 'flex-start', gap: 24 }}>
+              {anime.trailer?.youtube_id && (
+                <div className="anime-fullinfo-trailer-wrapper">
+                  <iframe
+                    title="Anime Trailer"
+                    src={`https://www.youtube.com/embed/${anime.trailer.youtube_id}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="anime-fullinfo-trailer"
+                  ></iframe>
+                </div>
+              )}
+              <div className="anime-fullinfo-meta-box">
+                <div><b>{anime.type}</b></div>
+                <div>Episodes: {anime.episodes}</div>
+                <div>{anime.status}</div>
+                <div>Score: {anime.score}</div>
+                {anime.aired && <div>Aired: {new Date(anime.aired).toLocaleDateString()}</div>}
+              </div>
             </div>
             <div className="anime-fullinfo-genres-row">
               {anime.genres?.map((g, i) => (
                 <span className="anime-fullinfo-genre-tag" key={g + i}>{g}</span>
               ))}
             </div>
-            <div className="anime-fullinfo-meta-row">
-              <span className="anime-fullinfo-type">{anime.type}</span>
-              <span className="anime-fullinfo-episodes">Episodes: {anime.episodes}</span>
-              <span className="anime-fullinfo-status">{anime.status}</span>
-              <span className="anime-fullinfo-score">Score: {anime.score}</span>
-              {anime.aired && <span className="anime-fullinfo-date">Aired: {new Date(anime.aired).toLocaleDateString()}</span>}
-            </div>
             <div className="anime-fullinfo-synopsis">{anime.synopsis}</div>
-            {anime.trailer?.youtube_id && (
-              <div className="anime-fullinfo-trailer-block">
-                <iframe
-                  title="Anime Trailer"
-                  width="360"
-                  height="210"
-                  src={`https://www.youtube.com/embed/${anime.trailer.youtube_id}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="anime-fullinfo-trailer"
-                ></iframe>
-              </div>
-            )}
           </div>
         </div>
       </div>
