@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './PostDetailsModal.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const getToken = () => localStorage.getItem('accessToken');
 
@@ -15,6 +15,7 @@ const PostDetailsModal = ({ postId, isOpen, onClose }) => {
   const [submittingComment, setSubmittingComment] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -175,7 +176,14 @@ const PostDetailsModal = ({ postId, isOpen, onClose }) => {
             </div>
             <div className="post-modal-info-block">
               <div className="post-modal-meta-row" style={{ marginBottom: 24 }}>
-                <div className="post-modal-author">
+                <div
+                  className="post-modal-author"
+                  style={{ cursor: 'pointer' }}
+                  tabIndex={0}
+                  aria-label={`Go to profile of @${post.author?.username}`}
+                  onClick={() => post.author?.id && navigate(`/profile/${post.author.id}`)}
+                  onKeyDown={e => { if (e.key === 'Enter' && post.author?.id) navigate(`/profile/${post.author.id}`); }}
+                >
                   <img src={post.author?.profileImageUrl} alt="author" className="post-modal-author-avatar" />
                   <span>@{post.author?.username}</span>
                 </div>
@@ -221,10 +229,28 @@ const PostDetailsModal = ({ postId, isOpen, onClose }) => {
                   <ul className="post-modal-comments-list">
                     {comments.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((c) => (
                       <li key={c.id} className="post-modal-comment-item">
-                        <img src={c.author?.profileImageUrl} alt="author" className="post-modal-comment-avatar" />
+                        <img
+                          src={c.author?.profileImageUrl}
+                          alt="author"
+                          className="post-modal-comment-avatar"
+                          style={{ cursor: 'pointer' }}
+                          tabIndex={0}
+                          aria-label={`Go to profile of @${c.author?.username}`}
+                          onClick={() => c.author?.id && navigate(`/profile/${c.author.id}`)}
+                          onKeyDown={e => { if (e.key === 'Enter' && c.author?.id) navigate(`/profile/${c.author.id}`); }}
+                        />
                         <div className="post-modal-comment-main">
                           <div className="post-modal-comment-header-row">
-                            <span className="post-modal-comment-author">@{c.author?.username}</span>
+                            <span
+                              className="post-modal-comment-author"
+                              style={{ cursor: 'pointer' }}
+                              tabIndex={0}
+                              aria-label={`Go to profile of @${c.author?.username}`}
+                              onClick={() => c.author?.id && navigate(`/profile/${c.author.id}`)}
+                              onKeyDown={e => { if (e.key === 'Enter' && c.author?.id) navigate(`/profile/${c.author.id}`); }}
+                            >
+                              @{c.author?.username}
+                            </span>
                             <span className="post-modal-comment-date">{new Date(c.createdAt).toLocaleString()}</span>
                             {c.author?.email === decodeJwt(getToken()).sub && (
                               <button className="post-modal-comment-delete" aria-label="Delete comment" onClick={() => handleDeleteComment(c.id)}>
