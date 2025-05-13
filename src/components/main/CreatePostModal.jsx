@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './CreatePostModal.css';
+import LottieLoader from '../LottieLoader';
 
 const getToken = () => localStorage.getItem('accessToken'); // Adjust if you use another storage
 
@@ -18,6 +19,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
   const [submitting, setSubmitting] = useState(false);
   const animeDropdownRef = useRef(null);
   const [animeSelected, setAnimeSelected] = useState(false);
+  const [animeError, setAnimeError] = useState('');
 
   useEffect(() => {
     if (isOpen) {
@@ -40,35 +42,41 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
     if (anime.length < 1) {
       setAnimeOptions([]);
       setShowAnimeDropdown(false);
+      setAnimeError('');
       return;
     }
     setAnimeLoading(true);
+    setAnimeError('');
     const controller = new AbortController();
     const fetchAnime = async () => {
       try {
         const token = getToken();
         const url = `/api/anime/jikan/search?query=${encodeURIComponent(anime)}`;
-        console.log('[Anime Search] Query:', anime);
-        console.log('[Anime Search] URL:', url);
-        console.log('[Anime Search] Token:', token);
         const res = await fetch(url, {
           headers: { 'Authorization': `Bearer ${token}` },
           signal: controller.signal,
         });
-        console.log('[Anime Search] Response status:', res.status);
         const text = await res.text();
-        console.log('[Anime Search] Raw response:', text);
         let data;
         try {
           data = JSON.parse(text);
         } catch {
-          throw new Error('Response is not valid JSON');
+          setAnimeError('Anime service unavailable');
+          setAnimeOptions([]);
+          setShowAnimeDropdown(false);
+          return;
         }
-        console.log('[Anime Search] Data:', data);
+        if (!res.ok || data.code || data.message) {
+          setAnimeError(data.message || 'Anime service unavailable');
+          setAnimeOptions([]);
+          setShowAnimeDropdown(false);
+          return;
+        }
+        setAnimeError('');
         setAnimeOptions(data);
         setShowAnimeDropdown(true);
       } catch (err) {
-        console.log('[Anime Search] Error:', err);
+        setAnimeError('Anime service unavailable');
         setAnimeOptions([]);
         setShowAnimeDropdown(false);
       } finally {
@@ -187,8 +195,9 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
               required
               onFocus={() => animeOptions.length > 0 && setShowAnimeDropdown(true)}
             />
-            {animeLoading && <div className="form-loading">Loading...</div>}
-            {showAnimeDropdown && animeOptions.length > 0 && (
+            {animeLoading && <div className="form-loading"><LottieLoader /></div>}
+            {animeError && <div className="form-error" style={{textAlign:'center', marginTop:8}}><LottieLoader />{animeError}</div>}
+            {showAnimeDropdown && animeOptions.length > 0 && !animeError && (
               <ul className="anime-dropdown" ref={animeDropdownRef}
                 onMouseDown={e => e.preventDefault()}
               >

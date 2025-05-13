@@ -8,6 +8,7 @@ import AnimeFullInfoPage from './pages/AnimeFullInfoPage'
 import UserProfilePage from './pages/UserProfilePage'
 import UserProfileViewPage from './pages/UserProfileViewPage'
 import PostSearchPage from './pages/PostSearchPage'
+import RecommendationsPage from './pages/RecommendationsPage'
 
 function App() {
   const location = useLocation();
@@ -24,6 +25,7 @@ function App() {
         <Route path="/profile/:userId" element={<UserProfileViewPage />} />
         <Route path="/anime/:title" element={<AnimeFullInfoPage />} />
         <Route path="/search" element={<PostSearchPage />} />
+        <Route path="/recommendations" element={<RecommendationsPage />} />
         <Route path="/" element={<Navigate to="/home" replace />} />
       </Routes>
     </div>

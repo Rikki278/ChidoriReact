@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import MainHeader from '../components/main/MainHeader';
 import ChidoriBackground from '../components/ChidoriBackground';
 import Masonry from 'react-masonry-css';
@@ -18,75 +17,40 @@ const breakpointColumns = {
   500: 1
 };
 
-const PAGE_SIZE = 20;
-
-const PostSearchPage = () => {
-  const location = useLocation();
+const RecommendationsPage = () => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
 
-  const query = new URLSearchParams(location.search).get('q') || '';
-
-  // Reset posts and page on new search
   useEffect(() => {
-    setPosts([]);
-    setPage(0);
-    setHasMore(true);
-    setError('');
-  }, [query]);
-
-  // Initial load and on page change
-  useEffect(() => {
-    let ignore = false;
-    const fetchPosts = async () => {
-      if ((page === 0 && posts.length > 0) || !hasMore) return;
-      if (page === 0) setLoading(true);
-      else setLoadingMore(true);
+    const fetchRecommendations = async () => {
+      setLoading(true);
+      setError('');
       try {
-        const res = await fetch(`/api/posts?anime=${encodeURIComponent(query)}&page=${page}&size=${PAGE_SIZE}`, {
+        // Get userId from profile
+        const profileRes = await fetch('/api/users/profile-posts', {
           headers: { 'Authorization': `Bearer ${getToken()}` },
         });
-        if (!res.ok) throw new Error('Failed to load posts');
-        const data = await res.json();
-        if (!ignore) {
-          setPosts(prev => page === 0 ? data : [...prev, ...data]);
-          setHasMore(data.length === PAGE_SIZE);
-        }
+        if (!profileRes.ok) throw new Error('Failed to get user profile');
+        const profile = await profileRes.json();
+        const userId = profile.id;
+        // Fetch recommendations
+        const recRes = await fetch(`/api/recommendations/user/${userId}`, {
+          headers: { 'Authorization': `Bearer ${getToken()}` },
+        });
+        if (!recRes.ok) throw new Error('Failed to load recommendations');
+        const data = await recRes.json();
+        setPosts(data);
       } catch {
-        if (!ignore) setError('Failed to load posts');
+        setError('Failed to load recommendations');
       } finally {
-        if (!ignore) {
-          setLoading(false);
-          setLoadingMore(false);
-        }
+        setLoading(false);
       }
     };
-    fetchPosts();
-    return () => { ignore = true; };
-    // eslint-disable-next-line
-  }, [query, page]);
-
-  // Infinite scroll handler
-  const handleScroll = useCallback(() => {
-    if (!hasMore || loadingMore || loading) return;
-    const scrollY = window.scrollY || window.pageYOffset;
-    const windowHeight = window.innerHeight;
-    const docHeight = document.documentElement.scrollHeight;
-    if (docHeight - (scrollY + windowHeight) < 300) {
-      setPage(p => p + 1);
-    }
-  }, [hasMore, loadingMore, loading]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+    fetchRecommendations();
+  }, []);
 
   const handleCardClick = (postId) => {
     setSelectedPostId(postId);
@@ -104,15 +68,15 @@ const PostSearchPage = () => {
       <div className="user-profile-root">
         <div className="user-profile-content" style={{ flexDirection: 'column', alignItems: 'center' }}>
           <div className="user-profile-posts-block" style={{ width: '100%' }}>
-            <h2>Search Results{query ? ` for "${query}"` : ''}</h2>
-            {loading && posts.length === 0 ? (
+            <h2>AI Recommendations</h2>
+            {loading ? (
               <div className="user-profile-loader">
                 <LottieLoader />
               </div>
             ) : error ? (
               <div className="user-profile-error">{error}</div>
             ) : posts.length === 0 ? (
-              <div className="user-profile-empty">No posts found</div>
+              <div className="user-profile-empty">No recommendations found</div>
             ) : (
               <div className="characters-section">
                 <Masonry
@@ -138,14 +102,6 @@ const PostSearchPage = () => {
                     </Tilt>
                   ))}
                 </Masonry>
-                {loadingMore && (
-                  <div className="user-profile-loader" style={{ margin: '32px 0' }}>
-                    <LottieLoader />
-                  </div>
-                )}
-                {!hasMore && posts.length > 0 && (
-                  <div style={{ color: '#6effff88', textAlign: 'center', margin: '32px 0 0 0', fontSize: '1.1em' }}></div>
-                )}
               </div>
             )}
           </div>
@@ -160,4 +116,4 @@ const PostSearchPage = () => {
   );
 };
 
-export default PostSearchPage; 
+export default RecommendationsPage; 
