@@ -11,7 +11,7 @@
   flex-direction: row;
   gap: 48px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
 }
 .user-profile-info {
   background: rgba(20,22,30,0.65);
@@ -19,8 +19,8 @@
   border-radius: 16px;
   box-shadow: 0 0 24px #6effff44;
   padding: 32px 28px 24px 28px;
-  min-width: 260px;
-  max-width: 320px;
+  min-width: 320px;
+  max-width: 420px;
   color: #d3e0f4;
   display: flex;
   flex-direction: column;
@@ -113,6 +113,186 @@
   text-align: center;
   margin: 40px 0;
 }
+
+/* Edit Profile Button */
+.edit-profile-btn {
+  background: linear-gradient(90deg, #0c7bb3, #00b4d8);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-top: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px #00b4d844;
+  outline: none;
+}
+
+.edit-profile-btn:hover, .edit-profile-btn:focus {
+  background: linear-gradient(90deg, #0c7bb3, #6effff);
+  box-shadow: 0 0 16px #6effff88;
+  transform: translateY(-2px);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(10, 15, 30, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* Edit Profile Modal */
+.edit-profile-modal {
+  background: rgba(20, 22, 30, 0.9);
+  border: 2px solid #6effff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 30px #6effff66, 0 0 15px #00b4d866;
+  animation: modal-fade-in 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #444b5e;
+}
+
+.modal-header h2 {
+  color: #6effff;
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #8fd7ff;
+  font-size: 1.8em;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.modal-close-btn:hover, .modal-close-btn:focus {
+  color: #6effff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Edit Form */
+.edit-profile-form {
+  padding: 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #8fd7ff;
+  font-weight: 500;
+}
+
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(30, 35, 45, 0.8);
+  border: 1.5px solid #444b5e;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1em;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+  border-color: #6effff;
+  box-shadow: 0 0 0 2px rgba(110, 255, 255, 0.3);
+  outline: none;
+}
+
+.update-error {
+  color: #ff5a9e;
+  margin: 10px 0;
+  font-size: 0.9em;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.cancel-btn, .save-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn {
+  background: transparent;
+  border: 1.5px solid #444b5e;
+  color: #8fd7ff;
+}
+
+.cancel-btn:hover, .cancel-btn:focus {
+  border-color: #6effff;
+  color: #6effff;
+}
+
+.save-btn {
+  background: linear-gradient(90deg, #0c7bb3, #00b4d8);
+  border: none;
+  color: white;
+}
+
+.save-btn:hover, .save-btn:focus {
+  background: linear-gradient(90deg, #00b4d8, #6effff);
+  box-shadow: 0 0 16px rgba(0, 180, 216, 0.5);
+}
+
+.save-btn:disabled {
+  background: #3a4054;
+  color: #8a93a8;
+  cursor: not-allowed;
+}
+
 @media (max-width: 900px) {
   .user-profile-content {
     flex-direction: column;
@@ -125,4 +305,78 @@
     width: 100%;
     padding: 24px 10px 18px 10px;
   }
+}
+
+.user-profile-relations {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0 0 0;
+  justify-content: center;
+}
+.relation-btn {
+  background: linear-gradient(90deg, #0c7bb3, #00b4d8);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-weight: 600;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 8px #00b4d844;
+  outline: none;
+}
+.relation-btn:hover, .relation-btn:focus {
+  background: linear-gradient(90deg, #0c7bb3, #6effff);
+  box-shadow: 0 0 16px #6effff88;
+  color: #0c7bb3;
+}
+
+/* Relation List in Modal */
+.relation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 340px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.relation-list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(30, 35, 45, 0.7);
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1.5px solid #00b4d8;
+  box-shadow: 0 0 8px #00b4d822;
+  transition: box-shadow 0.18s, border-color 0.18s;
+}
+.relation-list-item:hover, .relation-list-item:focus {
+  border-color: #6effff;
+  box-shadow: 0 0 16px #6effff44;
+}
+.relation-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #6effff;
+  background: #222b3a;
+}
+.relation-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.relation-username {
+  color: #6effff;
+  font-weight: 700;
+  font-size: 1.08em;
+}
+.relation-name {
+  color: #8fd7ff;
+  font-size: 0.98em;
 } 
