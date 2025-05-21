@@ -50,6 +50,7 @@ const MainHeader = () => {
           <Link to="/home" className="header-link" tabIndex={0} aria-label="Go to Home" style={{ fontWeight: 700, color: location.pathname === '/home' ? '#6effff' : undefined }}>Home</Link>
           <Link to="/search" className="header-link" tabIndex={0} aria-label="Go to Search" style={{ fontWeight: 700, color: location.pathname === '/search' ? '#6effff' : undefined }}>Search</Link>
           <Link to="/recommendations" className="header-link" tabIndex={0} aria-label="Go to AI Recommendations" style={{ fontWeight: 700, color: location.pathname === '/recommendations' ? '#6effff' : undefined }}>AI</Link>
+          <Link to="/chat" className="header-link" tabIndex={0} aria-label="Go to Chat" style={{ fontWeight: 700, color: location.pathname === '/chat' ? '#6effff' : undefined }}>Chat</Link>
           {!isAnimePage && (
             <Link to="/profile" className="header-link" tabIndex={0} aria-label="Go to Profile" style={{ fontWeight: 700, color: location.pathname === '/profile' ? '#6effff' : undefined }}>Profile</Link>
           )}

@@ -9,6 +9,7 @@ import UserProfilePage from './pages/UserProfilePage'
 import UserProfileViewPage from './pages/UserProfileViewPage'
 import PostSearchPage from './pages/PostSearchPage'
 import RecommendationsPage from './pages/RecommendationsPage'
+import ChatPage from './pages/ChatPage'
 
 function App() {
   const location = useLocation();
@@ -26,6 +27,7 @@ function App() {
         <Route path="/anime/:title" element={<AnimeFullInfoPage />} />
         <Route path="/search" element={<PostSearchPage />} />
         <Route path="/recommendations" element={<RecommendationsPage />} />
+        <Route path="/chat" element={<ChatPage />} />
         <Route path="/" element={<Navigate to="/home" replace />} />
       </Routes>
     </div>
