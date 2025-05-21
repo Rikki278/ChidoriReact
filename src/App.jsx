@@ -10,6 +10,7 @@ import UserProfileViewPage from './pages/UserProfileViewPage'
 import PostSearchPage from './pages/PostSearchPage'
 import RecommendationsPage from './pages/RecommendationsPage'
 import ChatPage from './pages/ChatPage'
+import AdminPage from './pages/AdminPage';
 
 function App() {
   const location = useLocation();
@@ -29,6 +30,7 @@ function App() {
         <Route path="/recommendations" element={<RecommendationsPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/adminpage" element={<AdminPage />} />
       </Routes>
     </div>
   )

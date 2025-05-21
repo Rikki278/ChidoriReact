@@ -431,12 +431,13 @@ const UserProfilePage = () => {
                 <span>Joined: {new Date(profile.createdAt).toLocaleDateString()}</span>
                 <span>Last login: {getTimeAgo(profile.lastLogin)}</span>
               </div>
-              <div className="user-profile-relations">
+              <div className="user-profile-relations" style={{ display: 'flex', flexDirection: 'row', gap: 6, justifyContent: 'center', marginTop: 10, marginBottom: 10, flexWrap: 'nowrap' }}>
                 <button
                   className="relation-btn"
                   onClick={handleOpenFollowers}
                   aria-label="Show followers"
                   tabIndex={0}
+                  style={{ fontSize: 14, padding: '5px 10px', minWidth: 0, whiteSpace: 'nowrap' }}
                 >
                   Followers: {followersCount}
                 </button>
@@ -445,6 +446,7 @@ const UserProfilePage = () => {
                   onClick={handleOpenFollowing}
                   aria-label="Show following"
                   tabIndex={0}
+                  style={{ fontSize: 14, padding: '5px 10px', minWidth: 0, whiteSpace: 'nowrap' }}
                 >
                   Following: {followingCount}
                 </button>
