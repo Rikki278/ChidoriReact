@@ -77,6 +77,9 @@
 .header-nav {
   display: flex;
   gap: 32px;
+  flex-wrap: wrap;
+  overflow: visible;
+  max-width: 100%;
 }
 .header-link {
   color: #d0e4ff;
@@ -84,6 +87,7 @@
   font-size: 1.1em;
   font-weight: 500;
   transition: color 0.2s;
+  white-space: nowrap;
 }
 .header-link:hover {
   color: #00b4d8;
@@ -239,4 +243,51 @@
   .my-masonry-grid_column {
     width: calc(100% - 20px) !important;
   }
+}
+
+.search-page-input {
+  background: rgba(20, 22, 30, 0.92);
+  border: 2px solid #6effff;
+  border-radius: 14px;
+  color: #d3e0f4;
+  font-size: 1.18em;
+  padding: 12px 22px;
+  margin: 24px 0 32px 0;
+  min-width: 220px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 0 18px #6effff44, 0 0 4px #00b4d8;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+  font-family: 'Orbitron', 'H7GBKHeavy', Arial, sans-serif;
+  letter-spacing: 1px;
+  text-align: left;
+}
+.search-page-input:focus {
+  border-color: #00b4d8;
+  box-shadow: 0 0 32px #6effff99, 0 0 12px #00b4d8;
+  background: rgba(20, 22, 30, 0.98);
+}
+.search-page-input::placeholder {
+  color: #6effffcc;
+  opacity: 1;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 700px) {
+  .search-page-input {
+    min-width: 0;
+    width: 100%;
+    font-size: 1em;
+    padding: 10px 12px;
+  }
+}
+
+.search-page-input-compact {
+  font-size: 1em;
+  padding: 7px 16px;
+  border-radius: 9px;
+  margin: 0;
+  box-shadow: 0 0 10px #6effff33, 0 0 2px #00b4d8;
 } 

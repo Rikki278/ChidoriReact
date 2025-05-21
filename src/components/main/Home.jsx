@@ -9,6 +9,7 @@ import CreatePostButton from './CreatePostButton';
 import CreatePostModal from './CreatePostModal';
 import PostDetailsModal from './PostDetailsModal';
 import { Link, useLocation } from 'react-router-dom';
+import MainHeader from './MainHeader';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -88,34 +89,7 @@ const Home = () => {
   return (
     <div className="home-bg" style={{ minHeight: '100vh', position: 'relative' }}>
       <ChidoriBackground />
-      <header className="main-header main-header-full">
-        <div className="header-title">
-          Chidori
-          <span className="header-title-jp">千鳥</span>
-        </div>
-        <nav className="header-nav">
-          <Link
-            to="/"
-            className="header-link"
-            aria-label="Home"
-            tabIndex={0}
-          >
-            Home
-          </Link>
-          {/* <Link to="/favorites" className="header-link" aria-label="Favorites" tabIndex={0}>Favorites</Link> */}
-          {/* <Link to="/chat" className="header-link" aria-label="Chat" tabIndex={0}>Chat</Link> */}
-          {!isAnimePage && (
-            <Link
-              to="/profile"
-              className="header-link"
-              aria-label="Profile"
-              tabIndex={0}
-            >
-              Profile
-            </Link>
-          )}
-        </nav>
-      </header>
+      <MainHeader />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginTop: '90px' }}>
         <div className="characters-section">
           <Masonry
