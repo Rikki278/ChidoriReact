@@ -74,7 +74,7 @@ const MainHeader = () => {
           <span className="header-title-jp">千鳥</span>
         </div>
       </div>
-      <div className="header-center">
+      <div className="header-center" style={{ position: 'absolute', left: '50%', top: '27%', transform: 'translateX(-50%)', width: 400, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 10 }}>
         {location.pathname === '/search' && (
           <input
             type="text"
@@ -87,44 +87,46 @@ const MainHeader = () => {
           />
         )}
         {/* Поиск пользователей */}
-        <div style={{ position: 'relative', display: 'inline-block', marginLeft: 18 }}>
-          <input
-            type="text"
-            className="search-page-input search-page-input-compact"
-            placeholder="Search users..."
-            value={userSearch}
-            onChange={handleUserSearchChange}
-            onFocus={() => userResults.length > 0 && setShowUserDropdown(true)}
-            onBlur={handleBlur}
-            aria-label="Search users"
-            style={{ maxWidth: 220, minWidth: 120, background: '#181a23', color: '#6effff', border: '1.5px solid #6effff', borderRadius: 10, paddingLeft: 14, fontSize: 15 }}
-          />
-          {showUserDropdown && (
-            <div style={{ position: 'absolute', top: 38, left: 0, width: '100%', background: '#23263a', border: '1.5px solid #6effff', borderRadius: 10, zIndex: 20, boxShadow: '0 4px 24px #00b4d822', maxHeight: 320, overflowY: 'auto' }}>
-              {loadingUsers ? (
-                <div style={{ color: '#6effff', padding: 12, textAlign: 'center' }}>Loading...</div>
-              ) : userResults.length === 0 ? (
-                <div style={{ color: '#90e0ef', padding: 12, textAlign: 'center' }}>No users found.</div>
-              ) : (
-                userResults.map(user => (
-                  <div
-                    key={user.id}
-                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: 10, cursor: 'pointer', borderRadius: 8, transition: 'background 0.2s', color: '#d0e4ff' }}
-                    onClick={() => handleUserClick(user.id)}
-                    tabIndex={0}
-                    aria-label={`Go to profile of @${user.username}`}
-                    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleUserClick(user.id)}
-                    onMouseDown={e => e.preventDefault()}
-                  >
-                    <img src={user.profileImageUrl} alt={user.username} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
-                    <span style={{ color: '#6effff', fontWeight: 700 }}>@{user.username}</span>
-                    {user.fullName && <span style={{ color: '#90e0ef', fontSize: 14 }}>{user.fullName}</span>}
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-        </div>
+        {location.pathname !== '/search' && (
+          <div style={{ position: 'relative', display: 'inline-block', marginLeft: 18 }}>
+            <input
+              type="text"
+              className="search-page-input search-page-input-compact"
+              placeholder="Search users..."
+              value={userSearch}
+              onChange={handleUserSearchChange}
+              onFocus={() => userResults.length > 0 && setShowUserDropdown(true)}
+              onBlur={handleBlur}
+              aria-label="Search users"
+              style={{ maxWidth: 220, minWidth: 120, background: '#181a23', color: '#6effff', border: '1.5px solid #6effff', borderRadius: 10, paddingLeft: 14, fontSize: 15 }}
+            />
+            {showUserDropdown && (
+              <div style={{ position: 'absolute', top: 38, left: 0, width: '100%', background: '#23263a', border: '1.5px solid #6effff', borderRadius: 10, zIndex: 20, boxShadow: '0 4px 24px #00b4d822', maxHeight: 320, overflowY: 'auto' }}>
+                {loadingUsers ? (
+                  <div style={{ color: '#6effff', padding: 12, textAlign: 'center' }}>Loading...</div>
+                ) : userResults.length === 0 ? (
+                  <div style={{ color: '#90e0ef', padding: 12, textAlign: 'center' }}>No users found.</div>
+                ) : (
+                  userResults.map(user => (
+                    <div
+                      key={user.id}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: 10, cursor: 'pointer', borderRadius: 8, transition: 'background 0.2s', color: '#d0e4ff' }}
+                      onClick={() => handleUserClick(user.id)}
+                      tabIndex={0}
+                      aria-label={`Go to profile of @${user.username}`}
+                      onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleUserClick(user.id)}
+                      onMouseDown={e => e.preventDefault()}
+                    >
+                      <img src={user.profileImageUrl} alt={user.username} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
+                      <span style={{ color: '#6effff', fontWeight: 700 }}>@{user.username}</span>
+                      {user.fullName && <span style={{ color: '#90e0ef', fontSize: 14 }}>{user.fullName}</span>}
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <div className="header-right">
         <nav className="header-nav">
