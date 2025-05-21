@@ -335,7 +335,7 @@ const ChatPage = () => {
           {selectedUser ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <button onClick={handleBackToUsers} style={{ background: 'none', border: 'none', color: '#6effff', fontSize: 22, cursor: 'pointer', marginRight: 10, padding: 0 }} aria-label="Back to user list">←</button>
-              <img src={selectedUser.profileImageUrl} alt={selectedUser.username} style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
+              <img src={selectedUser.profileImageUrl} alt={selectedUser.username} style={{ width: 50, height: 50, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
               <span style={{ color: '#6effff', fontWeight: 700, fontSize: 20 }}>@{selectedUser.username}</span>
               {selectedUser.fullName && <span style={{ color: '#90e0ef', fontSize: 15 }}>{selectedUser.fullName}</span>}
             </div>

@@ -175,12 +175,13 @@ const UserProfileView = ({ userId, isOwn }) => {
                 <span>Joined: {new Date(profile.createdAt).toLocaleDateString()}</span>
                 <span>Last login: {getTimeAgo(profile.lastLogin)}</span>
               </div>
-              <div className="user-profile-relations">
+              <div className="user-profile-relations" style={{ display: 'flex', flexDirection: 'row', gap: 6, justifyContent: 'center', marginTop: 10, marginBottom: 10, flexWrap: 'nowrap' }}>
                 <button
                   className="relation-btn"
                   onClick={handleOpenFollowers}
                   aria-label="Show followers"
                   tabIndex={0}
+                  style={{ fontSize: 14, padding: '5px 10px', minWidth: 0, whiteSpace: 'nowrap' }}
                 >
                   Followers: {followersCount}
                 </button>
@@ -189,21 +190,33 @@ const UserProfileView = ({ userId, isOwn }) => {
                   onClick={handleOpenFollowing}
                   aria-label="Show following"
                   tabIndex={0}
+                  style={{ fontSize: 14, padding: '5px 10px', minWidth: 0, whiteSpace: 'nowrap' }}
                 >
                   Following: {followingCount}
                 </button>
               </div>
               {!isOwn && (
-                <button
-                  className="edit-profile-btn"
-                  style={{ marginTop: 18, minWidth: 120 }}
-                  onClick={handleFollowToggle}
-                  disabled={followLoading}
-                  aria-label={isFollowing ? 'Unfollow user' : 'Follow user'}
-                  tabIndex={0}
-                >
-                  {followLoading ? '...' : isFollowing ? 'Unfollow' : 'Follow'}
-                </button>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 10, width: '100%', justifyContent: 'center', marginTop: 8 }}>
+                  <button
+                    className="edit-profile-btn"
+                    style={{ minWidth: 120 }}
+                    onClick={handleFollowToggle}
+                    disabled={followLoading}
+                    aria-label={isFollowing ? 'Unfollow user' : 'Follow user'}
+                    tabIndex={0}
+                  >
+                    {followLoading ? '...' : isFollowing ? 'Unfollow' : 'Follow'}
+                  </button>
+                  <button
+                    className="edit-profile-btn"
+                    style={{ minWidth: 120 }}
+                    onClick={() => navigate(`/chat?userId=${profile.id}`)}
+                    aria-label="Open chat with user"
+                    tabIndex={0}
+                  >
+                    Chat
+                  </button>
+                </div>
               )}
             </div>
             <div className="user-profile-posts-block">
