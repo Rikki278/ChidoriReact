@@ -18,6 +18,7 @@ const ChatPage = () => {
   const wsRef = useRef(null);
   const chatBottomRef = useRef(null);
   const [showUserList, setShowUserList] = useState(true);
+  const [chatPartners, setChatPartners] = useState([]);
 
   // Получить текущего пользователя
   useEffect(() => {
@@ -34,6 +35,32 @@ const ChatPage = () => {
       .then(setCurrentUser)
       .catch(() => setCurrentUser(null));
   }, []);
+
+  // Получить список собеседников (recent chats)
+  useEffect(() => {
+    if (!currentUser) return;
+    const token = localStorage.getItem('accessToken');
+    fetch(`${MESSAGE_API}/for/${currentUser.id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Not authorized');
+        return res.json();
+      })
+      .then(messages => {
+        const partners = {};
+        messages.forEach(msg => {
+          const partner = msg.sender.id === currentUser.id ? msg.receiver : msg.sender;
+          if (partner && partner.id !== currentUser.id) {
+            partners[partner.id] = partner;
+          }
+        });
+        setChatPartners(Object.values(partners));
+      })
+      .catch(() => setChatPartners([]));
+  }, [currentUser]);
 
   // Поиск пользователей
   useEffect(() => {
@@ -71,25 +98,36 @@ const ChatPage = () => {
         if (!res.ok) throw new Error('Not authorized');
         return res.json();
       })
-      .then(setMessages)
+      .then(history => {
+        setMessages(history);
+      })
       .catch(() => setMessages([]))
       .finally(() => setLoadingMessages(false));
   }, [selectedUser, currentUser]);
 
-  // WebSocket для новых сообщений
+  // WebSocket для новых сообщений (только добавляет новые, не затирает историю)
   useEffect(() => {
     if (!currentUser) return;
     wsRef.current = new window.WebSocket(`${WS_URL}?userId=${currentUser.id}`);
     wsRef.current.onmessage = (event) => {
       const msg = JSON.parse(event.data);
-      if (
-        selectedUser &&
-        ((msg.sender.id === currentUser.id && msg.receiver.id === selectedUser.id) ||
-          (msg.sender.id === selectedUser.id && msg.receiver.id === currentUser.id))
-      ) {
-        setMessages(prev => [...prev, msg]);
-      }
+      // Добавлять только если это сообщение для текущего открытого чата и оно не дублирует последнее
+      setMessages(prev => {
+        // Если это сообщение уже есть (например, оно пришло по WebSocket и уже есть в истории) — не добавлять
+        if (prev.some(m => m.id === msg.id)) return prev;
+        if (
+          selectedUser &&
+          ((msg.sender.id === currentUser.id && msg.receiver.id === selectedUser.id) ||
+            (msg.sender.id === selectedUser.id && msg.receiver.id === currentUser.id))
+        ) {
+          return [...prev, msg];
+        }
+        return prev;
+      });
     };
+    wsRef.current.onopen = () => console.log('WebSocket opened');
+    wsRef.current.onerror = (e) => console.error('WebSocket error', e);
+    wsRef.current.onclose = () => console.log('WebSocket closed');
     return () => wsRef.current && wsRef.current.close();
   }, [currentUser, selectedUser]);
 
@@ -146,9 +184,13 @@ const ChatPage = () => {
       setImageFile(null);
     } else {
       // Fallback на REST
+      const token = localStorage.getItem('accessToken');
       fetch(`${MESSAGE_API}/send`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(payload),
       })
         .then(res => res.json())
@@ -175,28 +217,19 @@ const ChatPage = () => {
       {showUserList && (
         <div style={{ width: 340, borderRight: '1.5px solid #23263a', padding: 24, background: 'rgba(20,22,30,0.97)', display: 'flex', flexDirection: 'column' }}>
           <h2 style={{ color: '#6effff', fontWeight: 700, fontSize: 24, marginBottom: 18 }}>Chat</h2>
-          <input
-            type="text"
-            placeholder="Search user by username..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            style={{ width: '100%', padding: 12, borderRadius: 10, border: '1.5px solid #6effff', background: 'rgba(20,22,30,0.92)', color: '#d0e4ff', marginBottom: 18, fontSize: 16 }}
-          />
-          <div style={{ flex: 1, overflowY: 'auto' }}>
-            {loadingUsers ? (
-              <div style={{ color: '#6effff', textAlign: 'center', marginTop: 30 }}>Loading...</div>
-            ) : users.length === 0 ? (
-              <div style={{ color: '#90e0ef', fontSize: 16, textAlign: 'center', marginTop: 30 }}>No users found.</div>
-            ) : (
-              users.map(user => (
+          {/* Recent chats */}
+          {chatPartners.length > 0 && (
+            <div style={{ marginBottom: 18 }}>
+              <div style={{ color: '#90e0ef', fontWeight: 600, fontSize: 15, marginBottom: 6 }}>Recent chats</div>
+              {chatPartners.map(user => (
                 <div
                   key={user.id}
                   style={{
-                    padding: 12,
+                    padding: 10,
                     cursor: 'pointer',
                     borderRadius: 8,
                     background: selectedUser?.id === user.id ? '#23263a' : 'transparent',
-                    marginBottom: 6,
+                    marginBottom: 4,
                     color: '#d0e4ff',
                     fontWeight: 500,
                     display: 'flex',
@@ -207,14 +240,90 @@ const ChatPage = () => {
                   }}
                   onClick={() => handleSelectUser(user)}
                   tabIndex={0}
-                  aria-label={`Start chat with ${user.username}`}
+                  aria-label={`Open chat with ${user.username}`}
                   onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleSelectUser(user)}
                 >
-                  <img src={user.profileImageUrl} alt={user.username} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
+                  <img src={user.profileImageUrl} alt={user.username} style={{ width: 50, height: 50, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
                   <span style={{ color: '#6effff', fontWeight: 700 }}>@{user.username}</span>
-                  {user.fullName && <span style={{ color: '#90e0ef', fontSize: 14 }}>{user.fullName}</span>}
+                  {user.fullName && <span style={{ color: '#90e0ef', fontSize: 13 }}>{user.fullName}</span>}
                 </div>
-              ))
+              ))}
+            </div>
+          )}
+          <input
+            type="text"
+            placeholder="Search user by username..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            style={{ width: '100%', padding: 12, borderRadius: 10, border: '1.5px solid #6effff', background: 'rgba(20,22,30,0.92)', color: '#d0e4ff', marginBottom: 18, fontSize: 16 }}
+          />
+          <div style={{ flex: 1, overflowY: 'auto' }}>
+            {loadingUsers ? (
+              <div style={{ color: '#6effff', textAlign: 'center', marginTop: 30 }}>Loading...</div>
+            ) : search ? (
+              users.length === 0 ? (
+                <div style={{ color: '#90e0ef', fontSize: 16, textAlign: 'center', marginTop: 30 }}>No users found.</div>
+              ) : (
+                users.map(user => (
+                  <div
+                    key={user.id}
+                    style={{
+                      padding: 12,
+                      cursor: 'pointer',
+                      borderRadius: 8,
+                      background: selectedUser?.id === user.id ? '#23263a' : 'transparent',
+                      marginBottom: 6,
+                      color: '#d0e4ff',
+                      fontWeight: 500,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12,
+                      border: selectedUser?.id === user.id ? '1.5px solid #6effff' : '1.5px solid transparent',
+                      transition: 'background 0.2s, border 0.2s',
+                    }}
+                    onClick={() => handleSelectUser(user)}
+                    tabIndex={0}
+                    aria-label={`Start chat with ${user.username}`}
+                    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleSelectUser(user)}
+                  >
+                    <img src={user.profileImageUrl} alt={user.username} style={{ width: 50, height: 50, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
+                    <span style={{ color: '#6effff', fontWeight: 700 }}>@{user.username}</span>
+                    {user.fullName && <span style={{ color: '#90e0ef', fontSize: 14 }}>{user.fullName}</span>}
+                  </div>
+                ))
+              )
+            ) : (
+              chatPartners.length === 0 ? (
+                <div style={{ color: '#90e0ef', fontSize: 16, textAlign: 'center', marginTop: 30 }}>No chats yet.</div>
+              ) : (
+                chatPartners.map(user => (
+                  <div
+                    key={user.id}
+                    style={{
+                      padding: 12,
+                      cursor: 'pointer',
+                      borderRadius: 8,
+                      background: selectedUser?.id === user.id ? '#23263a' : 'transparent',
+                      marginBottom: 6,
+                      color: '#d0e4ff',
+                      fontWeight: 500,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12,
+                      border: selectedUser?.id === user.id ? '1.5px solid #6effff' : '1.5px solid transparent',
+                      transition: 'background 0.2s, border 0.2s',
+                    }}
+                    onClick={() => handleSelectUser(user)}
+                    tabIndex={0}
+                    aria-label={`Open chat with ${user.username}`}
+                    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleSelectUser(user)}
+                  >
+                    <img src={user.profileImageUrl} alt={user.username} style={{ width: 50, height: 50, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
+                    <span style={{ color: '#6effff', fontWeight: 700 }}>@{user.username}</span>
+                    {user.fullName && <span style={{ color: '#90e0ef', fontSize: 14 }}>{user.fullName}</span>}
+                  </div>
+                ))
+              )
             )}
           </div>
         </div>
@@ -226,7 +335,7 @@ const ChatPage = () => {
           {selectedUser ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <button onClick={handleBackToUsers} style={{ background: 'none', border: 'none', color: '#6effff', fontSize: 22, cursor: 'pointer', marginRight: 10, padding: 0 }} aria-label="Back to user list">←</button>
-              <img src={selectedUser.profileImageUrl} alt={selectedUser.username} style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
+              <img src={selectedUser.profileImageUrl} alt={selectedUser.username} style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #6effff', background: '#23263a' }} />
               <span style={{ color: '#6effff', fontWeight: 700, fontSize: 20 }}>@{selectedUser.username}</span>
               {selectedUser.fullName && <span style={{ color: '#90e0ef', fontSize: 15 }}>{selectedUser.fullName}</span>}
             </div>
@@ -292,7 +401,13 @@ const ChatPage = () => {
               aria-label="Type your message"
               autoComplete="off"
             />
-            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: '50%', background: '#23263a', border: '1.5px solid #6effff', transition: 'background 0.2s', marginRight: 2 }}
+              tabIndex={0}
+              aria-label="Attach image"
+              onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && e.target.click()}
+              onMouseOver={e => e.currentTarget.style.background = '#1a1c28'}
+              onMouseOut={e => e.currentTarget.style.background = '#23263a'}
+            >
               <input
                 type="file"
                 accept="image/*"
@@ -300,14 +415,14 @@ const ChatPage = () => {
                 onChange={e => setImageFile(e.target.files[0] || null)}
                 aria-label="Attach image"
               />
-              <span style={{ marginLeft: 6, padding: '6px 10px', borderRadius: 8, background: '#23263a', color: '#6effff', fontSize: 15, border: '1.5px solid #6effff' }}>📎</span>
+              <svg width="22" height="22" fill="none" stroke="#6effff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 01-7.78-7.78l9.19-9.19a3.5 3.5 0 014.95 4.95l-9.2 9.19a1.5 1.5 0 01-2.12-2.12l8.49-8.49"/></svg>
             </label>
             {imagePreview && (
               <img src={imagePreview} alt="preview" style={{ width: 38, height: 38, objectFit: 'cover', borderRadius: 8, border: '1.5px solid #6effff' }} />
             )}
             <button
               type="submit"
-              style={{ background: '#6effff', color: '#181a23', border: 'none', borderRadius: 10, padding: '10px 24px', fontWeight: 700, fontSize: 16, cursor: 'pointer', transition: 'background 0.2s', marginLeft: 6 }}
+              style={{ background: '#6effff', color: '#181a23', border: 'none', borderRadius: 10, width: 90, height: 40, fontWeight: 700, fontSize: 16, cursor: 'pointer', transition: 'background 0.2s', marginLeft: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               disabled={!messageText.trim() && !imageFile}
               aria-label="Send message"
             >
