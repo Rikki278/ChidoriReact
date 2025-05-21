@@ -194,6 +194,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
               autoComplete="off"
               required
               onFocus={() => animeOptions.length > 0 && setShowAnimeDropdown(true)}
+              style={{ paddingRight: 16 }}
             />
             {animeLoading && <div className="form-loading"><LottieLoader /></div>}
             {animeError && <div className="form-error" style={{textAlign:'center', marginTop:8}}><LottieLoader />{animeError}</div>}

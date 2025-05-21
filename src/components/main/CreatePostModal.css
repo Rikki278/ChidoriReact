@@ -62,6 +62,14 @@
   color: #6effff;
 }
 
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
 .form-group input[type="text"],
 .form-group input[type="file"],
 .form-group textarea {
@@ -70,7 +78,6 @@
   border: 1px solid #3bc9db;
   border-radius: 8px;
   font-size: 15px;
-  padding: 8px 10px;
   outline: none;
   margin-bottom: 2px;
   transition: border 0.2s;
